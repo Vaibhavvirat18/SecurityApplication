@@ -38,9 +38,10 @@ public class AuthService {
     }
 
     public String login(LoginDTO loginDTO) {
+        System.out.println("XXXXXX");
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
-
+        System.out.println("YYYYYY");
         Users user = (Users) authentication.getPrincipal();
         return jwtService.generateToken(user);
     }

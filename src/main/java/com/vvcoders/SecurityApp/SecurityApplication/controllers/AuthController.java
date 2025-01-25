@@ -3,6 +3,7 @@ package com.vvcoders.SecurityApp.SecurityApplication.controllers;
 import com.vvcoders.SecurityApp.SecurityApplication.dto.LoginDTO;
 import com.vvcoders.SecurityApp.SecurityApplication.dto.SignUpDTO;
 import com.vvcoders.SecurityApp.SecurityApplication.dto.UsersDTO;
+import com.vvcoders.SecurityApp.SecurityApplication.exceptions.ResourceNotFoundException;
 import com.vvcoders.SecurityApp.SecurityApplication.services.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
