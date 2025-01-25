@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-//This is being disable for inMemoryUserDetailsManager to work as of now we dont have users in DB so cannot check our custom userDetailService implementation.
-//@Service
+
+@Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
