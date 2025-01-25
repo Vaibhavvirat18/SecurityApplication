@@ -1,10 +1,10 @@
 package com.vvcoders.SecurityApp.SecurityApplication;
 
+import com.vvcoders.SecurityApp.SecurityApplication.entities.Users;
 import com.vvcoders.SecurityApp.SecurityApplication.services.JwtService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import com.vvcoders.SecurityApp.SecurityApplication.entities.Users;
 
 @SpringBootTest
 class SecurityApplicationTests {
@@ -21,7 +21,7 @@ class SecurityApplicationTests {
 
 		System.out.println(token);
 
-		System.out.println(jwtService.getUserIdFromToken(token));
+		System.out.println(jwtService.getUserNameFromToken(token));
 
 
 	}

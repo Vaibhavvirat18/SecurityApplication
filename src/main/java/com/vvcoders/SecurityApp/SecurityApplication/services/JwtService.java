@@ -1,10 +1,11 @@
 package com.vvcoders.SecurityApp.SecurityApplication.services;
 
 import com.vvcoders.SecurityApp.SecurityApplication.entities.Users;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -33,14 +34,14 @@ public class JwtService {
                 .compact();
     }
 
-    public Long getUserIdFromToken(String token){
+    public String getUserNameFromToken(String token){
         Claims claim= Jwts.parser()
                 .verifyWith(getSecretKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
 
-        return Long.valueOf(claim.getSubject());
+        return claim.get("email", String.class);
     }
 
 }
