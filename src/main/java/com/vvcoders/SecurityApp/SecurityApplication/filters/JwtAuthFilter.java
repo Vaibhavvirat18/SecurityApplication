@@ -40,10 +40,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
 
             String token = requestTokenHeader.split("Bearer ")[1];
-            String userName = jwtService.getUserNameFromToken(token);
+            //Direct userName cannot be found through refreshToken as not setting it at time of generating the token.
+            Long userId = jwtService.getUserIdFromToken(token);
+            String userName = userService.findById(userId).getEmail();
+
 
             if(userName!=null && SecurityContextHolder.getContext().getAuthentication()== null){
                 Users user = userService.findByUsername(userName);
+                //This is done so that UsernamePasswordAuthenticationFilter can skip verifying the credentials again and again.
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, null);
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
