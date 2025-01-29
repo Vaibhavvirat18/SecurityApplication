@@ -22,14 +22,22 @@ public class JwtService {
         return Keys.hmacShaKeyFor(jwtSecretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(Users user) {
-
+    public String generateAccessToken(Users user) {
         return Jwts.builder()
                 .subject(user.getId().toString())
                 .claim("email", user.getEmail())
                 .claim("roles", List.of("ADMIN, USER"))
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60))
+                .expiration(new Date(System.currentTimeMillis() + 1000*60*10))
+                .signWith(getSecretKey())
+                .compact();
+    }
+
+    public String generateRefreshToken(Users user) {
+        return Jwts.builder()
+                .subject(user.getId().toString())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 1000L *60*60*24*30*6))
                 .signWith(getSecretKey())
                 .compact();
     }
@@ -40,8 +48,16 @@ public class JwtService {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-
         return claim.get("email", String.class);
+    }
+
+    public Long getUserIdFromToken(String token){
+        Claims claim= Jwts.parser()
+                .verifyWith(getSecretKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return Long.valueOf(claim.getSubject());
     }
 
 }
