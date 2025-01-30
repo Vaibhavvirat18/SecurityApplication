@@ -42,6 +42,7 @@ public class JwtService {
                 .compact();
     }
 
+    //If token is expired it throws error at this point.
     public String getUserNameFromToken(String token){
         Claims claim= Jwts.parser()
                 .verifyWith(getSecretKey())
@@ -51,6 +52,7 @@ public class JwtService {
         return claim.get("email", String.class);
     }
 
+    //If token is expired it throws error at this point.
     public Long getUserIdFromToken(String token){
         Claims claim= Jwts.parser()
                 .verifyWith(getSecretKey())
