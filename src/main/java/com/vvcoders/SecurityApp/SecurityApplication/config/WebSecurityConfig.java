@@ -4,6 +4,7 @@ import com.vvcoders.SecurityApp.SecurityApplication.filters.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.vvcoders.SecurityApp.SecurityApplication.enums.Permission.*;
 import static com.vvcoders.SecurityApp.SecurityApplication.enums.Role.ADMIN;
 
 @Configuration
@@ -27,6 +29,9 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth-> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/posts/**").hasRole(ADMIN.name())
+                        .requestMatchers(HttpMethod.POST, "/posts/**").hasAuthority(POST_CREATE.name())
+                        .requestMatchers(HttpMethod.PUT, "/posts/**").hasAuthority(POST_UPDATE.name())
+                        .requestMatchers(HttpMethod.DELETE, "/posts/**").hasAuthority(POST_DELETE.name())
                         .anyRequest().authenticated()) // All other endpoints require authentication
                         .csrf(csrfConfig-> csrfConfig.disable()) // Disable CSRF for APIs
                         .sessionManagement(sessionConfig->

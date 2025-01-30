@@ -1,6 +1,7 @@
 package com.vvcoders.SecurityApp.SecurityApplication.entities;
 
 
+import com.vvcoders.SecurityApp.SecurityApplication.enums.Permission;
 import com.vvcoders.SecurityApp.SecurityApplication.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,9 +13,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import static com.vvcoders.SecurityApp.SecurityApplication.utils.PermissionMapping.getAuthoritiesForRole;
 
 @Entity
 @Setter
@@ -36,10 +38,21 @@ public class Users implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private Set<Permission> permissions;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_"+role.name()))
-                .collect(Collectors.toSet());
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+
+        roles.forEach(role -> {
+            authorities.addAll(getAuthoritiesForRole(role));
+            authorities.add(new SimpleGrantedAuthority("ROLE_"+role));
+        });
+
+
+        return authorities;
     }
 
     @Override
