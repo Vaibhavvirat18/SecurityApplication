@@ -12,6 +12,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.vvcoders.SecurityApp.SecurityApplication.enums.Role.ADMIN;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -24,6 +26,7 @@ public class WebSecurityConfig {
         return httpSecurity
                 .authorizeHttpRequests(auth-> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/posts/**").hasRole(ADMIN.name())
                         .anyRequest().authenticated()) // All other endpoints require authentication
                         .csrf(csrfConfig-> csrfConfig.disable()) // Disable CSRF for APIs
                         .sessionManagement(sessionConfig->

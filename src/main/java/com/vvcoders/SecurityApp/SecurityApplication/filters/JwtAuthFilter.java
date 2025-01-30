@@ -34,13 +34,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         try{
             final String requestTokenHeader = request.getHeader("Authorization");
+
             if(requestTokenHeader == null || !requestTokenHeader.startsWith("Bearer")){
                 filterChain.doFilter(request, response);
                 return;
             }
 
             String token = requestTokenHeader.split("Bearer ")[1];
-            //Direct userName cannot be found through refreshToken as not setting it at time of generating the token.
             Long userId = jwtService.getUserIdFromToken(token);
             String userName = userService.findById(userId).getEmail();
 
@@ -48,7 +48,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             if(userName!=null && SecurityContextHolder.getContext().getAuthentication()== null){
                 Users user = userService.findByUsername(userName);
                 //This is done so that UsernamePasswordAuthenticationFilter can skip verifying the credentials again and again.
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, null);
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
             filterChain.doFilter(request, response);
